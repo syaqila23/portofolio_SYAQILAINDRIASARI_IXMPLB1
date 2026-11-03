@@ -1,0 +1,836 @@
+```html
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syaqila Indria Sari | Digital Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Press Start 2P & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgMain: '#080B18',
+                        bgSection: '#10152B',
+                        neonCyan: '#00F5FF',
+                        neonPink: '#FF3CAC',
+                        neonPurple: '#9D4EDD',
+                        textMain: '#F5F7FF',
+                        textSec: '#A7B0CC',
+                    },
+                    fontFamily: {
+                        arcade: ['"Press Start 2P"', 'cursive'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Retro Grid Background Animation */
+        .bg-retro-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 245, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 245, 255, 0.05) 1px, transparent 1px);
+        }
+
+        /* Neon Text and Border Glow Effects */
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.4), inset 0 0 10px rgba(0, 245, 255, 0.2);
+        }
+        .glow-pink {
+            box-shadow: 0 0 15px rgba(255, 60, 172, 0.4), inset 0 0 10px rgba(255, 60, 172, 0.2);
+        }
+        .text-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+        }
+        .text-glow-pink {
+            text-shadow: 0 0 10px rgba(255, 60, 172, 0.7);
+        }
+
+        /* Scanline Overlay for Arcade Feel */
+        .scanlines {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Reveal Animation Styles */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Respect Prefers-Reduced-Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080B18;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9D4EDD;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F5FF;
+        }
+    </style>
+</head>
+<body class="bg-bgMain text-textMain font-sans leading-relaxed min-h-screen relative bg-retro-grid overflow-x-hidden selection:bg-neonPink selection:text-white">
+
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-bgMain/90 backdrop-blur-md border-b border-neonCyan/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#hero" class="font-arcade text-2xl text-neonCyan tracking-widest text-glow-cyan flex items-center gap-2 group">
+                <span class="inline-block group-hover:rotate-12 transition-transform duration-300">👾</span> SQ.
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-6 lg:space-x-8 text-sm font-semibold">
+                <a href="#hero" class="nav-link hover:text-neonCyan transition-colors py-1">BERANDA</a>
+                <a href="#about" class="nav-link hover:text-neonCyan transition-colors py-1">TENTANG</a>
+                <a href="#skills" class="nav-link hover:text-neonCyan transition-colors py-1">KEMAMPUAN</a>
+                <a href="#projects" class="nav-link hover:text-neonCyan transition-colors py-1">PROYEK</a>
+                <a href="#contact" class="nav-link hover:text-neonCyan transition-colors py-1">KONTAK</a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="menu-btn" aria-label="Buka Menu Navigasi" class="md:hidden text-textMain hover:text-neonCyan p-2 rounded-lg border border-neonCyan/40">
+                <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Nav Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-bgSection border-b border-neonPink/40 px-4 pt-3 pb-6 space-y-3">
+            <a href="#hero" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-textMain hover:text-neonCyan hover:bg-bgMain/50">BERANDA</a>
+            <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-textMain hover:text-neonCyan hover:bg-bgMain/50">01. ABOUT PLAYER</a>
+            <a href="#skills" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-textMain hover:text-neonCyan hover:bg-bgMain/50">02. SKILL TREE</a>
+            <a href="#projects" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-textMain hover:text-neonCyan hover:bg-bgMain/50">03. QUEST LOG</a>
+            <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-md font-medium text-textMain hover:text-neonCyan hover:bg-bgMain/50">04. LET'S CONNECT</a>
+        </div>
+    </header>
+
+    <main class="pt-20">
+
+        <!-- SECTION 1: HERO -->
+        <section id="hero" class="min-h-[calc(100vh-80px)] flex items-center justify-center relative py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero Text Content -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left reveal">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neonPink/50 bg-neonPink/10 text-neonPink text-xs sm:text-sm font-semibold tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-neonPink animate-ping"></span>
+                        STUDENT • MPLB • DIGITAL CREATIVE
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-textMain tracking-tight leading-tight">
+                        Halo, aku <span class="text-neonCyan text-glow-cyan">Syaqila</span>.<br/>
+                        Selamat datang di dunia kreatifku!
+                    </h1>
+
+                    <p class="text-textSec text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Halo, selamat datang di website portofolio saya. Website ini dibuat untuk menampilkan berbagai proyek yang saya kerjakan, kemampuan yang saya pelajari, dan perjalanan saya dalam mengembangkan diri di dunia administrasi dan digital.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#projects" class="px-7 py-3.5 rounded-xl bg-neonCyan text-bgMain font-bold shadow-lg shadow-neonCyan/30 hover:shadow-neonCyan/60 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad"></i> Jelajahi Proyek
+                        </a>
+                        <a href="#contact" class="px-7 py-3.5 rounded-xl border-2 border-neonPink text-neonPink font-bold hover:bg-neonPink/10 hover:shadow-lg hover:shadow-neonPink/30 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Hubungi Saya
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Profile Photo Frame (Arcade Style) -->
+                <div class="lg:col-span-5 flex justify-center reveal">
+                    <div class="relative group w-64 sm:w-80 lg:w-88">
+                        <!-- Neon Frame Border Glow Effect -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-neonCyan via-neonPurple to-neonPink rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-500"></div>
+                        
+                        <!-- Arcade Card Container -->
+                        <div class="relative bg-bgSection border-2 border-neonCyan/80 rounded-2xl p-4 scanlines shadow-2xl">
+                            <!-- Header Arcade HUD -->
+                            <div class="flex items-center justify-between pb-3 mb-3 border-b border-textSec/20 font-arcade text-[10px] text-neonPink">
+                                <span>P1: SYAQILA</span>
+                                <span class="animate-pulse">● LIVE</span>
+                            </div>
+
+                            <!-- Real Photo Frame -->
+                            <div class="overflow-hidden rounded-xl border border-neonCyan/40 bg-bgMain aspect-[3/4] relative">
+                                <img src="foto-syaqila.jpg" 
+                                     onerror="this.onerror=null; this.src='https://placehold.co/600x800/10152B/00F5FF?text=Syaqila+Indria+Sari';" 
+                                     alt="Foto Profil Syaqila Indria Sari" 
+                                     class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                            </div>
+
+                            <!-- Footer Arcade HUD Label -->
+                            <div class="mt-3 pt-2 text-center border-t border-textSec/20">
+                                <span class="font-arcade text-xs text-neonCyan tracking-wider">RANK: LEVEL 1 MPLB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-textSec text-xs">
+                <span>SCROLL DOWN</span>
+                <i class="fa-solid fa-chevron-down text-neonCyan animate-bounce"></i>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ABOUT ME -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 bg-bgSection/70 border-y border-neonPurple/20">
+            <div class="max-w-7xl mx-auto space-y-12">
+                <!-- Section Title -->
+                <div class="text-center space-y-2 reveal">
+                    <h2 class="font-arcade text-neonCyan text-sm tracking-widest uppercase">01. ABOUT PLAYER</h2>
+                    <p class="text-2xl sm:text-4xl font-extrabold text-textMain">Mengenal Lebih Dekat Syaqila</p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-neonCyan to-neonPink mx-auto rounded-full mt-2"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Bio Text Column -->
+                    <div class="lg:col-span-7 bg-bgMain/60 border border-neonCyan/30 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl reveal">
+                        <h3 class="text-xl font-bold text-neonPink flex items-center gap-2">
+                            <i class="fa-solid fa-user-astronaut"></i> Profil Singkat
+                        </h3>
+                        <p class="text-textMain/90 leading-relaxed">
+                            Halo! Saya Syaqila Indria Sari, seorang siswi SMK Cyber Media Jakarta yang sedang menempuh pendidikan di jurusan Manajemen Perkantoran dan Layanan Bisnis (MPLB). Saya memiliki ketertarikan pada administrasi perkantoran, pengelolaan dokumen, penyusunan informasi, dan pemanfaatan teknologi untuk membuat pekerjaan menjadi lebih teratur dan efisien.
+                        </p>
+                        <p class="text-textMain/90 leading-relaxed">
+                            Saya senang mempelajari hal baru, menyelesaikan tugas secara teliti, dan mengembangkan kemampuan melalui proyek-proyek kreatif. Bagi saya, setiap proyek adalah kesempatan untuk belajar, mencoba ide baru, dan meningkatkan kualitas hasil pekerjaan.
+                        </p>
+                        <p class="text-textMain/90 leading-relaxed">
+                            Melalui website portofolio ini, saya ingin mendokumentasikan proses belajar, menampilkan hasil karya, serta terus mengembangkan keterampilan yang bermanfaat untuk masa depan profesional saya.
+                        </p>
+                    </div>
+
+                    <!-- Player Stats & Profile Card Column -->
+                    <div class="lg:col-span-5 bg-bgMain border border-neonPink/40 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl reveal">
+                        <div class="flex items-center justify-between border-b border-neonPink/30 pb-4">
+                            <span class="font-arcade text-neonPink text-xs tracking-wider">PLAYER PROFILE</span>
+                            <span class="text-xs bg-neonPink/20 text-neonPink px-2.5 py-1 rounded font-mono">ID #2026-MPLB</span>
+                        </div>
+
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-textSec/10 pb-3">
+                                <span class="text-textSec flex items-center gap-2"><i class="fa-solid fa-school text-neonCyan"></i> Sekolah</span>
+                                <span class="font-semibold text-textMain">SMK Cyber Media Jakarta</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-textSec/10 pb-3">
+                                <span class="text-textSec flex items-center gap-2"><i class="fa-solid fa-briefcase text-neonCyan"></i> Jurusan</span>
+                                <span class="font-semibold text-textMain">Manajemen Perkantoran & Layanan Bisnis</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-textSec/10 pb-3">
+                                <span class="text-textSec flex items-center gap-2"><i class="fa-solid fa-heart text-neonCyan"></i> Minat Utama</span>
+                                <span class="font-semibold text-textMain text-right">Administrasi, Pengelolaan Dokumen, Digital Apps</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                                <span class="text-textSec flex items-center gap-2"><i class="fa-solid fa-gem text-neonCyan"></i> Nilai Pribadi</span>
+                                <span class="font-semibold text-textMain">Teliti, Teratur, Disiplin</span>
+                            </li>
+                        </ul>
+
+                        <!-- Arcade Style Stat Badges -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <div class="bg-bgSection p-3 rounded-xl border border-neonCyan/30 text-center">
+                                <div class="font-arcade text-xs text-textSec mb-1">ACCURACY</div>
+                                <div class="text-neonCyan font-bold text-lg">HIGH 🎯</div>
+                            </div>
+                            <div class="bg-bgSection p-3 rounded-xl border border-neonPink/30 text-center">
+                                <div class="font-arcade text-xs text-textSec mb-1">PASSION</div>
+                                <div class="text-neonPink font-bold text-lg">MAX ⚡</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: SKILLS -->
+        <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+            <div class="max-w-7xl mx-auto space-y-12">
+                <!-- Section Title -->
+                <div class="text-center space-y-2 reveal">
+                    <h2 class="font-arcade text-neonPink text-sm tracking-widest uppercase">02. SKILL TREE</h2>
+                    <p class="text-2xl sm:text-4xl font-extrabold text-textMain">Kemampuan & Keterampilan Utama</p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-neonPink to-neonPurple mx-auto rounded-full mt-2"></div>
+                </div>
+
+                <!-- Skill Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Skill 1 -->
+                    <div class="bg-bgSection/90 border border-neonCyan/30 hover:border-neonCyan rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonCyan/20 group reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-neonCyan/10 border border-neonCyan/40 flex items-center justify-center text-neonCyan text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-file-word"></i>
+                            </div>
+                            <span class="font-arcade text-[10px] px-2.5 py-1 rounded bg-neonCyan/20 text-neonCyan border border-neonCyan/40">LEVEL: PRACTICING</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-textMain mb-2 group-hover:text-neonCyan transition-colors">Microsoft Word</h3>
+                        <p class="text-textSec text-sm mb-4 leading-relaxed">
+                            Menyusun dan memformat dokumen, surat resmi, serta laporan kerja kantor secara terstruktur dan rapi.
+                        </p>
+                        <div class="w-full bg-bgMain rounded-full h-2 overflow-hidden border border-neonCyan/20">
+                            <div class="bg-neonCyan h-full rounded-full w-4/5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 2 -->
+                    <div class="bg-bgSection/90 border border-neonPink/30 hover:border-neonPink rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonPink/20 group reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-neonPink/10 border border-neonPink/40 flex items-center justify-center text-neonPink text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-file-excel"></i>
+                            </div>
+                            <span class="font-arcade text-[10px] px-2.5 py-1 rounded bg-neonPink/20 text-neonPink border border-neonPink/40">LEVEL: DEVELOPING</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-textMain mb-2 group-hover:text-neonPink transition-colors">Microsoft Excel</h3>
+                        <p class="text-textSec text-sm mb-4 leading-relaxed">
+                            Mengolah data numerik, pengorganisasian tabel, dan menggunakan spreadsheet untuk efisiensi administrasi.
+                        </p>
+                        <div class="w-full bg-bgMain rounded-full h-2 overflow-hidden border border-neonPink/20">
+                            <div class="bg-neonPink h-full rounded-full w-3/4"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 3 -->
+                    <div class="bg-bgSection/90 border border-neonPurple/30 hover:border-neonPurple rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonPurple/20 group reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-neonPurple/10 border border-neonPurple/40 flex items-center justify-center text-neonPurple text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-file-powerpoint"></i>
+                            </div>
+                            <span class="font-arcade text-[10px] px-2.5 py-1 rounded bg-neonPurple/20 text-neonPurple border border-neonPurple/40">LEVEL: PRACTICING</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-textMain mb-2 group-hover:text-neonPurple transition-colors">Microsoft PowerPoint</h3>
+                        <p class="text-textSec text-sm mb-4 leading-relaxed">
+                            Menyusun slide presentasi yang terstruktur, komunikatif, dan visual menarik untuk kebutuhan paparan.
+                        </p>
+                        <div class="w-full bg-bgMain rounded-full h-2 overflow-hidden border border-neonPurple/20">
+                            <div class="bg-neonPurple h-full rounded-full w-4/5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 4 -->
+                    <div class="bg-bgSection/90 border border-neonCyan/30 hover:border-neonCyan rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonCyan/20 group reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-neonCyan/10 border border-neonCyan/40 flex items-center justify-center text-neonCyan text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-language"></i>
+                            </div>
+                            <span class="font-arcade text-[10px] px-2.5 py-1 rounded bg-neonCyan/20 text-neonCyan border border-neonCyan/40">LEVEL: LEARNING</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-textMain mb-2 group-hover:text-neonCyan transition-colors">English Communication</h3>
+                        <p class="text-textSec text-sm mb-4 leading-relaxed">
+                            Kemampuan berkomunikasi dasar dalam bahasa Inggris yang terus dilatih dan dikembangkan secara aktif.
+                        </p>
+                        <div class="w-full bg-bgMain rounded-full h-2 overflow-hidden border border-neonCyan/20">
+                            <div class="bg-neonCyan h-full rounded-full w-2/3"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 5 -->
+                    <div class="bg-bgSection/90 border border-neonPink/30 hover:border-neonPink rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonPink/20 group md:col-span-2 lg:col-span-1 reveal">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-neonPink/10 border border-neonPink/40 flex items-center justify-center text-neonPink text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-calculator"></i>
+                            </div>
+                            <span class="font-arcade text-[10px] px-2.5 py-1 rounded bg-neonPink/20 text-neonPink border border-neonPink/40">LEVEL: DEVELOPING</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-textMain mb-2 group-hover:text-neonPink transition-colors">Mathematical Problem Solving</h3>
+                        <p class="text-textSec text-sm mb-4 leading-relaxed">
+                            Menyelesaikan persoalan matematika dan perhitungan logis melalui penalaran sistematis.
+                        </p>
+                        <div class="w-full bg-bgMain rounded-full h-2 overflow-hidden border border-neonPink/20">
+                            <div class="bg-neonPink h-full rounded-full w-3/4"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PROJECTS -->
+        <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 bg-bgSection/50 border-y border-neonCyan/20">
+            <div class="max-w-7xl mx-auto space-y-12">
+                <!-- Section Title -->
+                <div class="text-center space-y-2 reveal">
+                    <h2 class="font-arcade text-neonCyan text-sm tracking-widest uppercase">03. QUEST LOG</h2>
+                    <p class="text-2xl sm:text-4xl font-extrabold text-textMain">Hasil Proyek & Showcase</p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-neonCyan to-neonPurple mx-auto rounded-full mt-2"></div>
+                </div>
+
+                <!-- Projects Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Project Card 1: Oasis Tugas -->
+                    <div class="bg-bgMain border border-neonCyan/40 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-neonCyan hover:shadow-neonCyan/20 transition-all duration-300 group reveal">
+                        <div>
+                            <!-- Visual Graphic Mockup Banner -->
+                            <div class="h-48 bg-gradient-to-br from-amber-900 via-rose-950 to-bgMain border-b border-neonCyan/30 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-retro-grid opacity-20"></div>
+                                <div class="text-center p-4 z-10">
+                                    <span class="font-arcade text-amber-400 text-xs tracking-widest block mb-1">ARABIAN NIGHTS THEME</span>
+                                    <h4 class="text-2xl font-bold text-white tracking-wider">OASIS TUGAS</h4>
+                                </div>
+                                <span class="absolute top-3 right-3 bg-neonCyan/20 border border-neonCyan/50 text-neonCyan text-[10px] font-arcade px-2 py-1 rounded">QUEST #1</span>
+                            </div>
+
+                            <div class="p-6 space-y-3">
+                                <span class="text-xs font-semibold text-neonCyan uppercase tracking-wider">Productivity Web App</span>
+                                <h3 class="text-xl font-bold text-textMain group-hover:text-neonCyan transition-colors">Oasis Tugas</h3>
+                                <p class="text-textSec text-sm line-clamp-3">
+                                    Aplikasi pengelolaan tugas dengan konsep Arabian Nights yang membantu pengguna mengatur aktivitas secara terstruktur melalui dashboard, daftar tugas, checklist, dan fitur pengelolaan tugas.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">HTML/CSS</span>
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">JavaScript</span>
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">UI Design</span>
+                            </div>
+
+                            <button onclick="openModal('project1')" class="w-full py-2.5 rounded-xl border border-neonCyan text-neonCyan font-semibold hover:bg-neonCyan hover:text-bgMain transition-all duration-300 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2: Kata & Karsa -->
+                    <div class="bg-bgMain border border-neonPink/40 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-neonPink hover:shadow-neonPink/20 transition-all duration-300 group reveal">
+                        <div>
+                            <!-- Visual Graphic Mockup Banner -->
+                            <div class="h-48 bg-gradient-to-br from-purple-950 via-slate-900 to-bgMain border-b border-neonPink/30 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-retro-grid opacity-20"></div>
+                                <div class="text-center p-4 z-10">
+                                    <span class="font-arcade text-neonPink text-xs tracking-widest block mb-1">ONLINE BOOKSTORE</span>
+                                    <h4 class="text-2xl font-bold text-white tracking-wider">KATA & KARSA</h4>
+                                </div>
+                                <span class="absolute top-3 right-3 bg-neonPink/20 border border-neonPink/50 text-neonPink text-[10px] font-arcade px-2 py-1 rounded">QUEST #2</span>
+                            </div>
+
+                            <div class="p-6 space-y-3">
+                                <span class="text-xs font-semibold text-neonPink uppercase tracking-wider">E-Commerce Website</span>
+                                <h3 class="text-xl font-bold text-textMain group-hover:text-neonPink transition-colors">Kata & Karsa</h3>
+                                <p class="text-textSec text-sm line-clamp-3">
+                                    Konsep website toko buku online dengan tampilan hangat dan modern untuk menampilkan koleksi buku, menyediakan pencarian katalog, serta menghadirkan pengalaman berbelanja yang nyaman.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">Frontend Web</span>
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">E-Commerce Catalog</span>
+                            </div>
+
+                            <button onclick="openModal('project2')" class="w-full py-2.5 rounded-xl border border-neonPink text-neonPink font-semibold hover:bg-neonPink hover:text-bgMain transition-all duration-300 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3: Arunika Inventory -->
+                    <div class="bg-bgMain border border-neonPurple/40 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-neonPurple hover:shadow-neonPurple/20 transition-all duration-300 group md:col-span-2 lg:col-span-1 reveal">
+                        <div>
+                            <!-- Visual Graphic Mockup Banner -->
+                            <div class="h-48 bg-gradient-to-br from-indigo-950 via-blue-950 to-bgMain border-b border-neonPurple/30 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-retro-grid opacity-20"></div>
+                                <div class="text-center p-4 z-10">
+                                    <span class="font-arcade text-neonPurple text-xs tracking-widest block mb-1">OFFICE MANAGEMENT</span>
+                                    <h4 class="text-2xl font-bold text-white tracking-wider">ARUNIKA INVENTORY</h4>
+                                </div>
+                                <span class="absolute top-3 right-3 bg-neonPurple/20 border border-neonPurple/50 text-neonPurple text-[10px] font-arcade px-2 py-1 rounded">QUEST #3</span>
+                            </div>
+
+                            <div class="p-6 space-y-3">
+                                <span class="text-xs font-semibold text-neonPurple uppercase tracking-wider">Inventory Management System</span>
+                                <h3 class="text-xl font-bold text-textMain group-hover:text-neonPurple transition-colors">Arunika Inventory</h3>
+                                <p class="text-textSec text-sm line-clamp-3">
+                                    Konsep aplikasi manajemen inventaris kantor untuk membantu pengelolaan data barang, lokasi penyimpanan, transaksi barang, peminjaman, pemeliharaan, dan laporan inventaris.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">Office Admin</span>
+                                <span class="bg-bgSection text-textSec px-2 py-0.5 rounded border border-textSec/20">Management App</span>
+                            </div>
+
+                            <button onclick="openModal('project3')" class="w-full py-2.5 rounded-xl border border-neonPurple text-neonPurple font-semibold hover:bg-neonPurple hover:text-bgMain transition-all duration-300 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CONTACT ME -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+            <div class="max-w-7xl mx-auto space-y-12">
+                <!-- Section Title -->
+                <div class="text-center space-y-2 reveal">
+                    <h2 class="font-arcade text-neonPink text-sm tracking-widest uppercase">04. LET'S CONNECT</h2>
+                    <p class="text-2xl sm:text-4xl font-extrabold text-textMain">Hubungi Saya</p>
+                    <p class="text-textSec text-sm max-w-xl mx-auto pt-1">
+                        Punya pertanyaan, ide, atau ingin berdiskusi tentang proyek? Silakan hubungi saya melalui media sosial atau kontak berikut.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-neonPink to-neonCyan mx-auto rounded-full mt-2"></div>
+                </div>
+
+                <!-- Contact Grid Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                    
+                    <!-- Instagram Card -->
+                    <a href="https://instagram.com/sarisyaqila3" target="_blank" rel="noopener noreferrer" 
+                       class="bg-bgSection border border-neonPink/30 hover:border-neonPink p-6 rounded-2xl flex flex-col items-center text-center space-y-3 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonPink/20 group reveal">
+                        <div class="w-14 h-14 rounded-full bg-neonPink/10 border border-neonPink/40 flex items-center justify-center text-neonPink text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <span class="font-bold text-textMain group-hover:text-neonPink transition-colors">Instagram</span>
+                        <span class="text-xs text-textSec font-mono">@sarisyaqila3</span>
+                    </a>
+
+                    <!-- TikTok Card -->
+                    <a href="https://www.tiktok.com/@syql5" target="_blank" rel="noopener noreferrer" 
+                       class="bg-bgSection border border-neonCyan/30 hover:border-neonCyan p-6 rounded-2xl flex flex-col items-center text-center space-y-3 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonCyan/20 group reveal">
+                        <div class="w-14 h-14 rounded-full bg-neonCyan/10 border border-neonCyan/40 flex items-center justify-center text-neonCyan text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-tiktok"></i>
+                        </div>
+                        <span class="font-bold text-textMain group-hover:text-neonCyan transition-colors">TikTok</span>
+                        <span class="text-xs text-textSec font-mono">@syql5</span>
+                    </a>
+
+                    <!-- WhatsApp Card -->
+                    <a href="https://wa.me/62895337286903" target="_blank" rel="noopener noreferrer" 
+                       class="bg-bgSection border border-emerald-500/30 hover:border-emerald-400 p-6 rounded-2xl flex flex-col items-center text-center space-y-3 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-emerald-500/20 group reveal">
+                        <div class="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-400/40 flex items-center justify-center text-emerald-400 text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <span class="font-bold text-textMain group-hover:text-emerald-400 transition-colors">WhatsApp</span>
+                        <span class="text-xs text-textSec font-mono">0895337286903</span>
+                    </a>
+
+                    <!-- Email Card -->
+                    <a href="mailto:sarisyaqila5@gmail.com" 
+                       class="bg-bgSection border border-neonPurple/30 hover:border-neonPurple p-6 rounded-2xl flex flex-col items-center text-center space-y-3 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-neonPurple/20 group reveal">
+                        <div class="w-14 h-14 rounded-full bg-neonPurple/10 border border-neonPurple/40 flex items-center justify-center text-neonPurple text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <span class="font-bold text-textMain group-hover:text-neonPurple transition-colors">Email</span>
+                        <span class="text-xs text-textSec font-mono break-all">sarisyaqila5@gmail.com</span>
+                    </a>
+
+                </div>
+
+                <!-- Direct Email Action Trigger Button -->
+                <div class="text-center pt-4 reveal">
+                    <a href="mailto:sarisyaqila5@gmail.com" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-neonPink to-neonPurple text-white font-bold shadow-lg shadow-neonPink/20 hover:shadow-neonPink/40 hover:-translate-y-1 transition-all duration-300">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Email Langsung
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SECTION 6: FOOTER -->
+    <footer class="bg-bgSection border-t border-neonCyan/30 pt-12 pb-8 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-textSec/10 pb-8">
+                
+                <!-- Footer Brand -->
+                <div class="text-center md:text-left space-y-1">
+                    <a href="#hero" class="font-arcade text-2xl text-neonCyan tracking-widest text-glow-cyan inline-block">SQ.</a>
+                    <p class="text-textMain font-semibold text-sm">Syaqila Indria Sari</p>
+                    <p class="text-textSec text-xs">Siswa Manajemen Perkantoran & Layanan Bisnis (MPLB)</p>
+                </div>
+
+                <!-- Footer Navigation Links -->
+                <nav class="flex flex-wrap justify-center gap-6 text-xs font-semibold">
+                    <a href="#hero" class="hover:text-neonCyan transition-colors">HERO</a>
+                    <a href="#about" class="hover:text-neonCyan transition-colors">ABOUT</a>
+                    <a href="#skills" class="hover:text-neonCyan transition-colors">SKILLS</a>
+                    <a href="#projects" class="hover:text-neonCyan transition-colors">PROJECTS</a>
+                    <a href="#contact" class="hover:text-neonCyan transition-colors">CONTACT</a>
+                </nav>
+
+                <!-- Footer Social Icons -->
+                <div class="flex items-center gap-4">
+                    <a href="https://instagram.com/sarisyaqila3" target="_blank" aria-label="Instagram" class="w-9 h-9 rounded-lg bg-bgMain border border-neonPink/40 flex items-center justify-center text-neonPink hover:bg-neonPink hover:text-bgMain transition-all">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@syql5" target="_blank" aria-label="TikTok" class="w-9 h-9 rounded-lg bg-bgMain border border-neonCyan/40 flex items-center justify-center text-neonCyan hover:bg-neonCyan hover:text-bgMain transition-all">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="https://wa.me/62895337286903" target="_blank" aria-label="WhatsApp" class="w-9 h-9 rounded-lg bg-bgMain border border-emerald-400/40 flex items-center justify-center text-emerald-400 hover:bg-emerald-400 hover:text-bgMain transition-all">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright and Required Sign-off Text -->
+            <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-textSec gap-4 text-center">
+                <p>Dibuat dengan ❤️🤍🌹 oleh syaqilaindria</p>
+                <p>&copy; <span id="copyright-year"></span> Syaqila Indria Sari. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BACK TO TOP BUTTON -->
+    <button id="back-to-top" aria-label="Kembali ke Atas" class="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-xl bg-neonCyan text-bgMain border border-neonCyan/50 shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:scale-110">
+        <i class="fa-solid fa-arrow-up text-lg"></i>
+    </button>
+
+    <!-- PROJECT DETAIL MODAL CONTAINER -->
+    <div id="project-modal" class="fixed inset-0 z-50 bg-bgMain/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-bgSection border-2 border-neonCyan rounded-2xl max-w-2xl w-full p-6 sm:p-8 space-y-6 relative shadow-2xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <!-- Close Modal Button -->
+            <button onclick="closeModal()" aria-label="Tutup Detail Modal" class="absolute top-4 right-4 text-textSec hover:text-neonPink w-8 h-8 rounded-lg border border-textSec/20 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Content Header -->
+            <div>
+                <span id="modal-category" class="text-xs font-semibold text-neonCyan uppercase tracking-wider block mb-1"></span>
+                <h3 id="modal-title" class="text-2xl font-bold text-textMain"></h3>
+            </div>
+
+            <!-- Modal Body Description -->
+            <p id="modal-description" class="text-textMain/90 text-sm leading-relaxed"></p>
+
+            <!-- Highlighted Features List -->
+            <div class="space-y-3">
+                <h4 class="font-bold text-textMain text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-star text-neonPink"></i> Fitur Utama Proyek:
+                </h4>
+                <ul id="modal-features" class="space-y-2 text-sm text-textSec pl-4 list-disc marker:text-neonCyan"></ul>
+            </div>
+
+            <!-- Tech Stack Tags -->
+            <div class="space-y-2 border-t border-textSec/20 pt-4">
+                <h4 class="font-bold text-textMain text-xs">TEKNOLOGI & IMPLEMENTASI:</h4>
+                <div id="modal-tags" class="flex flex-wrap gap-2 text-xs font-mono"></div>
+            </div>
+
+            <!-- Modal Action Footer -->
+            <div class="pt-4 border-t border-textSec/20 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl bg-neonCyan text-bgMain font-bold hover:bg-neonCyan/80 transition-colors">
+                    Tutup Detail
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Project Detail Data Store
+        const projectData = {
+            project1: {
+                title: "Oasis Tugas",
+                category: "Productivity Web App",
+                description: "Aplikasi pengelolaan tugas dengan konsep Arabian Nights yang membantu pengguna mengatur aktivitas secara terstruktur melalui dashboard, daftar tugas, checklist, dan fitur pengelolaan tugas.",
+                features: [
+                    "Halaman login pengguna",
+                    "Dashboard ringkasan tugas",
+                    "Fitur tambah dan pengelolaan tugas",
+                    "Daftar serta checklist tugas harian",
+                    "Desain visual khas Arabian Nights dengan aksen warna maroon, emas, dan krem"
+                ],
+                tags: ["HTML5", "CSS3", "JavaScript", "Productivity App", "UI/UX Design"]
+            },
+            project2: {
+                title: "Kata & Karsa",
+                category: "E-Commerce Website",
+                description: "Konsep website toko buku online dengan tampilan hangat dan modern untuk menampilkan koleksi buku, menyediakan pencarian katalog, serta menghadirkan pengalaman berbelanja yang lebih nyaman.",
+                features: [
+                    "Halaman beranda atraktif",
+                    "Katalog dan fitur pencarian buku",
+                    "Pengelompokan kategori buku",
+                    "Fitur keranjang belanja interaktif",
+                    "Tampilan pesanan dan detail deskripsi buku"
+                ],
+                tags: ["HTML5", "CSS Layout", "Web Catalog", "E-Commerce UI"]
+            },
+            project3: {
+                title: "Arunika Inventory",
+                category: "Inventory Management System",
+                description: "Konsep aplikasi manajemen inventaris kantor untuk membantu pengelolaan data barang, lokasi penyimpanan, transaksi barang, peminjaman, pengembalian, pemeliharaan, dan laporan inventaris.",
+                features: [
+                    "Dashboard ringkasan inventaris kantor",
+                    "Pengelolaan data barang dan lokasi penyimpanan",
+                    "Pencatatan barang masuk dan barang keluar",
+                    "Sistem peminjaman dan pengembalian barang",
+                    "Pemantauan kondisi barang dan jadwal maintenance",
+                    "Laporan inventaris, notifikasi, riwayat aktivitas, dan manajemen pengguna"
+                ],
+                tags: ["Office Administration System", "Inventory Log", "Web Application", "UI Prototype"]
+            }
+        };
+
+        // Automatic Copyright Year Update
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        menuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-xmark');
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            }
+        });
+
+        // Close Mobile Menu on Nav Link Click
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
+
+        // Intersection Observer for Scroll Reveal Animations
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Back to Top Button Visibility & Click Handler
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Modal Functionalities
+        const modal = document.getElementById('project-modal');
+
+        function openModal(projectId) {
+            const data = projectData[projectId];
+            if (!data) return;
+
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-category').textContent = data.category;
+            document.getElementById('modal-description').textContent = data.description;
+
+            // Render features list
+            const featuresList = document.getElementById('modal-features');
+            featuresList.innerHTML = '';
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.textContent = feat;
+                featuresList.appendChild(li);
+            });
+
+            // Render tags
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'bg-bgMain text-neonCyan border border-neonCyan/40 px-2.5 py-1 rounded';
+                span.textContent = tag;
+                tagsContainer.appendChild(span);
+            });
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Close Modal when clicking backdrop
+        modal.addEventListener('click', closeModal);
+
+        // Close Modal with Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
+```
